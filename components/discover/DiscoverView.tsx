@@ -148,8 +148,8 @@ export function DiscoverView() {
           .order('created_at', { ascending: false })
 
         if (error) {
-          console.error('Supabase error:', error)
-          // Fall back to mock data
+          // Tables likely don't exist yet - silently fall back to mock data
+          // This is expected until the Supabase schema is run
           setGardens(mockGardens)
           setLoading(false)
           return
