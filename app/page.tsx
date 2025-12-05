@@ -22,9 +22,9 @@ export default function HomePage() {
             <span>Visualise Your Garden</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link href="/map" className="btn-secondary inline-flex items-center justify-center gap-2">
+          <Link href="/discover" className="btn-secondary inline-flex items-center justify-center gap-2">
             <Map className="w-4 h-4" />
-            <span>Explore the Map</span>
+            <span>Discover Gardens</span>
           </Link>
         </div>
       </section>
@@ -42,14 +42,14 @@ export default function HomePage() {
           </p>
         </Link>
 
-        <Link href="/map" className="card group hover:shadow-md transition-shadow">
+        <Link href="/discover" className="card group hover:shadow-md transition-shadow">
           <div className="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-stone-200 transition-colors">
             <Map className="w-6 h-6 text-stone-600" />
           </div>
-          <h2 className="section-title group-hover:text-stone-900">Community Map</h2>
-          <p className="section-subtitle">世界地図</p>
+          <h2 className="section-title group-hover:text-stone-900">Discover Gardens</h2>
+          <p className="section-subtitle">庭園を探す</p>
           <p className="text-stone-600 mt-3">
-            Discover beautiful niwaki gardens around the world, submitted by our community.
+            Explore the map, see top-rated gardens, and discover beautiful niwaki from around the world.
           </p>
         </Link>
 
@@ -79,9 +79,9 @@ export default function HomePage() {
           <p className="text-sm text-stone-500 mt-1">From basics to expert</p>
         </Link>
 
-        <Link href="/leaderboard" className="p-4 rounded-lg border border-stone-200 hover:border-stone-300 hover:bg-white transition-all group">
+        <Link href="/discover" className="p-4 rounded-lg border border-stone-200 hover:border-stone-300 hover:bg-white transition-all group">
           <Award className="w-5 h-5 text-stone-500 mb-2" />
-          <h3 className="font-medium text-stone-800 group-hover:text-stone-900">Leaderboard</h3>
+          <h3 className="font-medium text-stone-800 group-hover:text-stone-900">Rankings</h3>
           <p className="text-sm text-stone-500 mt-1">Top rated gardens</p>
         </Link>
 

@@ -241,6 +241,42 @@ CREATE POLICY "Moderators can update queue" ON public.moderation_queue
 CREATE POLICY "Users can report" ON public.moderation_queue
   FOR INSERT WITH CHECK (true);
 
+-- Garden to species junction table
+CREATE TABLE IF NOT EXISTS public.garden_species (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  garden_location_id UUID NOT NULL REFERENCES public.garden_locations(id) ON DELETE CASCADE,
+  species_id UUID NOT NULL REFERENCES public.species(id) ON DELETE CASCADE,
+  UNIQUE(garden_location_id, species_id)
+);
+
+-- Enable RLS on garden_species
+ALTER TABLE public.garden_species ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Garden species viewable" ON public.garden_species FOR SELECT USING (true);
+CREATE POLICY "Users can manage own garden species" ON public.garden_species
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM public.garden_locations WHERE id = garden_location_id AND user_id = requesting_user_id())
+  );
+
+-- Add latitude and longitude columns to garden_locations for easier querying
+-- These can be computed from the PostGIS geography column
+ALTER TABLE public.garden_locations ADD COLUMN IF NOT EXISTS latitude FLOAT;
+ALTER TABLE public.garden_locations ADD COLUMN IF NOT EXISTS longitude FLOAT;
+
+-- Trigger to auto-populate lat/lng from geography
+CREATE OR REPLACE FUNCTION update_garden_coords()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.latitude := extensions.st_y(NEW.location::extensions.geometry);
+  NEW.longitude := extensions.st_x(NEW.location::extensions.geometry);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_garden_location_change
+BEFORE INSERT OR UPDATE OF location ON public.garden_locations
+FOR EACH ROW EXECUTE FUNCTION update_garden_coords();
+
 -- Create storage bucket for photos
 -- Note: Run this in Supabase Dashboard > Storage
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('photos', 'photos', true);
