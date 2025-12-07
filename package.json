@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.35.6",
+    "@google/genai": "^1.31.0",
     "@google/generative-ai": "^0.24.1",
     "@img-comparison-slider/react": "^8.0.2",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
