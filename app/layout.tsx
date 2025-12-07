@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs'
-import { Inter } from 'next/font/google'
+import { Inter, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -7,6 +7,11 @@ import { Footer } from '@/components/layout/Footer'
 export const dynamic = 'force-dynamic'
 
 const inter = Inter({ subsets: ['latin'] })
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-cormorant',
+})
 
 export const metadata = {
   title: {
@@ -43,7 +48,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.className} min-h-screen bg-stone-100 ink-wash flex flex-col`}>
+        <body className={`${inter.className} ${cormorant.variable} min-h-screen bg-stone-100 ink-wash flex flex-col`}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

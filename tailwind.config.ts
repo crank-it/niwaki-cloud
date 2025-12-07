@@ -31,10 +31,21 @@ const config: Config = {
           700: '#44403c',
           800: '#292524',
           900: '#1c1917',
+        },
+        niwaki: {
+          moss: '#4a5d4a',
+          pine: '#2d3d2d',
+          bamboo: '#8b9a6b',
+          bark: '#5c4a3d',
+          stone: '#7a7a72',
+          cream: '#f5f3ed',
+          paper: '#faf9f6',
+          ink: '#2a2a28',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
       },
       animation: {
         'float': 'float 3s ease-in-out infinite',
