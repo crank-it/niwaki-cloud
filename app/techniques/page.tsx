@@ -1,14 +1,44 @@
 import { Metadata } from 'next'
 import { TechniqueCard } from '@/components/content/TechniqueCard'
-import { allTechniques } from '@/content/techniques'
+import { createClient } from '@/lib/supabase/server'
 import { Scissors } from 'lucide-react'
+import type { Difficulty } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Pruning Techniques',
   description: 'Master the art of Japanese cloud pruning with our comprehensive technique guides, from beginner basics to advanced methods.',
 }
 
-export default function TechniquesPage() {
+// Map database difficulty to our Difficulty type
+function mapDifficulty(level: number | null, description: string | null): Difficulty {
+  if (description) {
+    const desc = description.toLowerCase()
+    if (desc.includes('beginner')) return 'beginner'
+    if (desc.includes('expert') || desc.includes('advanced')) return 'expert'
+    return 'intermediate'
+  }
+  if (level !== null) {
+    if (level <= 3) return 'beginner'
+    if (level >= 7) return 'expert'
+    return 'intermediate'
+  }
+  return 'intermediate'
+}
+
+export default async function TechniquesPage() {
+  const supabase = await createClient()
+
+  const { data: techniques, error } = await supabase
+    .from('techniques')
+    .select('slug, name, japanese_name, japanese_characters, difficulty_level, difficulty_description, time_per_tree, summary')
+    .eq('published', true)
+    .order('featured', { ascending: false })
+    .order('name')
+
+  if (error) {
+    console.error('Error fetching techniques:', error)
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       {/* Header */}
@@ -28,26 +58,33 @@ export default function TechniquesPage() {
 
       {/* Techniques grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {allTechniques.map((technique) => (
-          <TechniqueCard
-            key={technique.slug}
-            slug={technique.slug}
-            title={technique.title}
-            japaneseTitle={technique.japaneseTitle}
-            difficulty={technique.difficulty}
-            timeRequired={technique.timeRequired}
-            introduction={technique.introduction}
-          />
-        ))}
+        {techniques && techniques.length > 0 ? (
+          techniques.map((technique) => (
+            <TechniqueCard
+              key={technique.slug}
+              slug={technique.slug}
+              title={technique.name}
+              japaneseTitle={technique.japanese_characters || technique.japanese_name || ''}
+              difficulty={mapDifficulty(technique.difficulty_level, technique.difficulty_description)}
+              timeRequired={technique.time_per_tree || 'Varies'}
+              introduction={technique.summary}
+            />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12 text-stone-500">
+            <p>No techniques available yet. Check back soon!</p>
+          </div>
+        )}
       </div>
 
-      {/* Coming soon */}
-      <div className="mt-12 text-center">
-        <p className="text-sm text-stone-500">
-          More technique guides coming soon, including Midoritsumi (candle pinching),
-          Momiage (needle plucking), and branch wiring.
-        </p>
-      </div>
+      {/* Technique count */}
+      {techniques && techniques.length > 0 && (
+        <div className="mt-12 text-center">
+          <p className="text-sm text-stone-500">
+            {techniques.length} technique{techniques.length !== 1 ? 's' : ''} available
+          </p>
+        </div>
+      )}
     </div>
   )
 }
