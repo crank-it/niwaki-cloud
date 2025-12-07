@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  // Transpile Remotion packages for Next.js compatibility
+  transpilePackages: ['remotion', '@remotion/player'],
 }
 
 export default nextConfig
